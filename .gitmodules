@@ -1,0 +1,3 @@
+[submodule "lib/trialdata"]
+	path = lib/trialdata
+	url = https://github.com/mattperich/trialdata.git
