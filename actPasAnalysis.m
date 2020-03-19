@@ -15,7 +15,9 @@
 
 %% normalize data
     
-    trial_data.emg = normalize(trial_data.emg);    
+    trial_data.emg = normalize(trial_data.emg, 'range');  
+    params.signals = {'emg','all'};
+    trial_data = smoothSignals(trial_data,params);
 
 %% split into trials
 
@@ -32,8 +34,8 @@
 
     %active
      td_act = getNorm(td_act,struct('signals','vel','field_extra','_norm'));
-     paramsAct.start_idx = 'idx_goCueTime';
-     paramsAct.end_idx = 'idx_endTime';
+     paramsAct.start_idx = {'idx_goCueTime',-5};
+     paramsAct.end_idx = {'idx_goCueTime',100};
      td_act = getMoveOnsetAndPeak(td_act, paramsAct);
      td_act = td_act(~isnan([td_act.idx_movement_on]));
      td_act = td_act(~isnan([td_act.tgtDir]));
@@ -41,7 +43,7 @@
     %passive
      td_bump = getNorm(td_bump,struct('signals','vel','field_extra','_norm'));
      paramsBump.start_idx = 'idx_bumpTime';
-     paramsBump.end_idx = 'idx_goCueTime';
+     paramsBump.end_idx = {'idx_bumpTime',105};
      td_bump = getMoveOnsetAndPeak(td_bump, paramsBump);
      td_bump = td_bump(~isnan([td_bump.idx_movement_on]));
      td_bump = td_bump(~isnan([td_bump.bumpDir]));
@@ -91,17 +93,23 @@ avgDataPass = trialAverage(tdBump,paramsPas);
     muscleNames = string({'deltAnt','deltMid','deltPost','triMid','biLat'});
     directions = string({'0','90','180','270'});
     
+    figure
+    k=0;
+    
     for i=1:numel(muscleArray)
         for j=1:4
+            k=k+1;
+            subplot(numel(muscleArray),4,k);
             figureName = strcat(muscleNames(i),directions(j));
-            figure()
             title(figureName)
             hold on
             errorbar(timeArray, avgDataAct(j).emg(81:121,muscleArray(i)), avgDataAct(j).emg_std(81:121,muscleArray(i)))
             errorbar(timeArray, avgDataPass(j).emg(81:121,muscleArray(i)), avgDataPass(j).emg_std(81:121,muscleArray(i)))
             %plot(timeArray, avgDataAct(j).emg(81:121,muscleArray(i)))
             %plot(timeArray, avgDataPass(j).emg(81:121,muscleArray(i)))
-            legend('Active Average EMG','Passive Average EMG')
+            if k==1
+                legend('Active Average EMG','Passive Average EMG')
+            end
         end
     end
     
