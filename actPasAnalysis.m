@@ -1,10 +1,10 @@
 %% set file names, load file
 
-    inputData.dataFileName = 'C:\Users\joh8881\Desktop\ActPassData\Han_20170203_COactpas_5ms.mat';
-%     inputData.mapFileName = 'mapFileR:\limblab\lab_folder\Animal-Miscellany\Han_13B1\map files\Left S1\SN 6251-001459.cmp';
+    %inputData.dataFileName = 'C:\Users\joh8881\Desktop\ActPassData\Han_20170203_COactpas_5ms.mat';
+    inputData.dataFileName = '/Volumes/fsmresfiles/Basic_Sciences/Phys/L_MillerLab/limblab/User_folders/Juliet/actPasAnalysis/Han_20171201_COactpas_5ms.mat';
 
-    % inputData.mapFileName = 'mapFileR:\limblab-archive\Retired Animal Logs\Monkeys\Chips_12H1\map_files\left S1\SN 6251-001455.cmp';
-    inputData.mapFileName = 'mapFileZ:\Basic_Sciences\Phys\L_MillerLab\limblab\lab_folder\Animal-Miscellany\Han_13B1\map files\Left S1\SN 6251-001459.cmp';
+    %inputData.mapFileName = 'mapFileZ:\Basic_Sciences\Phys\L_MillerLab\limblab\lab_folder\Animal-Miscellany\Han_13B1\map files\Left S1\SN 6251-001459.cmp';
+    %inputData.mapFileName = 'mapFileVolumes\fsmresfiles\Basic_Sciences\Phys\L_MillerLab\limblab\lab_folder\Animal-Miscellany\Han_13B1\map files\Left S1\SN 6251-001455.cmp';
 
     load(inputData.dataFileName);
     
@@ -12,7 +12,11 @@
     inputData.array1='arrayLeftS1'; 
     inputData.monkey='monkeyHan';
     inputData.labnum = 6;
+
+%% normalize data
     
+    trial_data.emg = normalize(trial_data.emg);    
+
 %% split into trials
 
     splitParams.split_idx_name = 'idx_startTime';
@@ -71,8 +75,13 @@
     
 %% find average emg signals
 
-avgDataAct = trialAverage(tdAct,{'tgtDir'});
-avgDataPass = trialAverage(tdBump,{'bumpDir'});
+paramsAct.conditions = 'tgtDir';
+paramsAct.add_std = true;
+avgDataAct = trialAverage(tdAct,paramsAct);
+
+paramsPas.conditions = 'bumpDir';
+paramsPas.add_std = true;
+avgDataPass = trialAverage(tdBump,paramsPas);
 
 %% plot avg emg signals
 
@@ -88,8 +97,10 @@ avgDataPass = trialAverage(tdBump,{'bumpDir'});
             figure()
             title(figureName)
             hold on
-            plot(timeArray, avgDataAct(j).emg(81:121,muscleArray(i)))
-            plot(timeArray, avgDataPass(j).emg(81:121,muscleArray(i)))
+            errorbar(timeArray, avgDataAct(j).emg(81:121,muscleArray(i)), avgDataAct(j).emg_std(81:121,muscleArray(i)))
+            errorbar(timeArray, avgDataPass(j).emg(81:121,muscleArray(i)), avgDataPass(j).emg_std(81:121,muscleArray(i)))
+            %plot(timeArray, avgDataAct(j).emg(81:121,muscleArray(i)))
+            %plot(timeArray, avgDataPass(j).emg(81:121,muscleArray(i)))
             legend('Active Average EMG','Passive Average EMG')
         end
     end
