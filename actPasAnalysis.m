@@ -143,9 +143,9 @@
     
     %plot 'em
     figEMG = figure('Name','EMG');
-%     figMuscleVel = figure('Name','Muscle Velocity');
-%     figMuscleLen = figure('Name','Muscle Length');
-%     figUnits = figure('Name','Neural Units');
+    figMuscleVel = figure('Name','Muscle Velocity');
+    figMuscleLen = figure('Name','Muscle Length');
+    figUnits = figure('Name','Neural Units');
     k=0;
     
     for i=1:numel(muscleArrayEMG)
@@ -171,71 +171,71 @@
                 legend([emgact emgpas],{'Active','Passive'},'Position',[0 0.8 0.12 0.1])
             end
             
-%             %muscle velocity plots
-%             set(0,'CurrentFigure',figMuscleVel)
-%             subplot(numel(muscleArrayM),numel(directions),k);
-%             title(strcat(muscleNames(i),directions(j)))
-%             hold on
-            %act with +- 95% CI
-%             plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',1)
-%             plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i))+avgDataAct(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
-%             plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i))-avgDataAct(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
-            %pas with +_ 95% CI
-%             plot(timeArray,avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',1)
-%             plot(timeArray, avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)), avgDataPass(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
-%             plot(timeArray, avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)), avgDataPass(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
-%             axis([-500 500 0 0.8]);
-%             sgtitle('Muscle Velocity');
-%             if k==1
-%                 legend('Active','Passive','Position',[0 0.8 0.12 0.1])
-%             end
-%             
-%             %muscle length plots
-%             set(0,'CurrentFigure',figMuscleLen)
-%             subplot(numel(muscleArrayM),numel(directions),k);
-%             title(strcat(muscleNames(i),directions(j)))
-%             hold on
-            %act with +-95% CI
-%             plot(timeArray,avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',1)
-%             plot(timeArray, avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i))+avgDataAct(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
-%             plot(timeArray, avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i))-avgDataAct(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
-            %pas with +-95% CI
-%             plot(timeArray,avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',1)
-%             plot(timeArray, avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i))+avgDataPass(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
-%             plot(timeArray, avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i))-avgDataPass(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
-%             axis([-500 500 0 0.8]);
-%             sgtitle('Muscle Length');
-%             if k==1
-%                 legend('Active','Passive','Position',[0 0.8 0.12 0.1])
-%             end
+            %muscle velocity plots
+            set(0,'CurrentFigure',figMuscleVel)
+            subplot(numel(muscleArrayM),numel(directions),k);
+            title(strcat(muscleNames(i),directions(j)))
+            hold on
+            act with +- 95% CI
+            plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',1)
+            plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i))+avgDataAct(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
+            plot(timeArray, avgDataAct(j).muscle_vel(tStart:tEnd,muscleArrayM(i))-avgDataAct(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
+            pas with +_ 95% CI
+            plot(timeArray,avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',1)
+            plot(timeArray, avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)), avgDataPass(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
+            plot(timeArray, avgDataPass(j).muscle_vel(tStart:tEnd,muscleArrayM(i)), avgDataPass(j).muscle_vel_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
+            axis([-500 500 0 0.8]);
+            sgtitle('Muscle Velocity');
+            if k==1
+                legend('Active','Passive','Position',[0 0.8 0.12 0.1])
+            end
+            
+            %muscle length plots
+            set(0,'CurrentFigure',figMuscleLen)
+            subplot(numel(muscleArrayM),numel(directions),k);
+            title(strcat(muscleNames(i),directions(j)))
+            hold on
+            act with +-95% CI
+            plot(timeArray,avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',1)
+            plot(timeArray, avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i))+avgDataAct(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
+            plot(timeArray, avgDataAct(j).muscle_len(tStart:tEnd,muscleArrayM(i))-avgDataAct(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'k','LineWidth',0.01)
+            pas with +-95% CI
+            plot(timeArray,avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',1)
+            plot(timeArray, avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i))+avgDataPass(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
+            plot(timeArray, avgDataPass(j).muscle_len(tStart:tEnd,muscleArrayM(i))-avgDataPass(j).muscle_len_confInt(tStart:tEnd,muscleArrayM(i)),'r','LineWidth',0.01)
+            axis([-500 500 0 0.8]);
+            sgtitle('Muscle Length');
+            if k==1
+                legend('Active','Passive','Position',[0 0.8 0.12 0.1])
+            end
         end
     end
     
-%     k=0;
-%     for i=11:17
-%         for j=1:numel(directions)
-%             k=k+1;
-%             
-%             %neural unit plots
-%             set(0,'CurrentFigure',figUnits)
-%             subplot(7,numel(directions),k);
-%             title(strcat('Neuron',int2str(i),' Direction',directions(j)))
-%             hold on
-            %act with +-95% CI
-%             plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i),'k','LineWidth',1)
-%             plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i)+avgDataAct(j).S1_spikes_confInt(tStart:tEnd,i),'k','LineWidth',0.01)
-%             plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i)-avgDataAct(j).S1_spikes_confInt(tStart:tEnd,i),'k','LineWidth',0.01)
-            %pas with +-95% CI
-%             plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i),'r','LineWidth',1)
-%             plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i)+avgDataPass(j).S1_spikes_confInt(tStart:tEnd,i),'r','LineWidth',1)
-%             plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i)-avgDataPass(j).S1_spikes_confInt(tStart:tEnd,i),'r','LineWidth',1)
-%             axis([-500 500 0 10]);
-%             sgtitle('Neural Units');
-%             if k==1
-%                 legend('Active','Passive','Position',[0 0.8 0.12 0.1])
-%             end
-%         end
-%     end
+    k=0;
+    for i=11:17
+        for j=1:numel(directions)
+            k=k+1;
+            
+            %neural unit plots
+            set(0,'CurrentFigure',figUnits)
+            subplot(7,numel(directions),k);
+            title(strcat('Neuron',int2str(i),' Direction',directions(j)))
+            hold on
+            act with +-95% CI
+            plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i),'k','LineWidth',1)
+            plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i)+avgDataAct(j).S1_spikes_confInt(tStart:tEnd,i),'k','LineWidth',0.01)
+            plot(timeArray, avgDataAct(j).S1_spikes(tStart:tEnd,i)-avgDataAct(j).S1_spikes_confInt(tStart:tEnd,i),'k','LineWidth',0.01)
+            pas with +-95% CI
+            plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i),'r','LineWidth',1)
+            plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i)+avgDataPass(j).S1_spikes_confInt(tStart:tEnd,i),'r','LineWidth',1)
+            plot(timeArray, avgDataPass(j).S1_spikes(tStart:tEnd,i)-avgDataPass(j).S1_spikes_confInt(tStart:tEnd,i),'r','LineWidth',1)
+            axis([-500 500 0 10]);
+            sgtitle('Neural Units');
+            if k==1
+                legend('Active','Passive','Position',[0 0.8 0.12 0.1])
+            end
+        end
+    end
     
     
     clear i j k tStart tEnd dir directions muscleArrayEMG muscleArrayM muscleNames timeArray
@@ -249,8 +249,12 @@
     %define muscles
     muscleArrayEMG = [5,6,7,12,22,3,17]; %from EMG list
     muscleNames = string({'deltAnt','deltMid','deltPost','triMid','biLat','FCU','ECU'});
-    %trials to look at
-    trials=[1,100,200,300,400];
+    %directions to look at
+    dir = {td_bump.bumpDir};
+    dirs = unique(cell2mat(dir));
+    directions = string(dirs);
+    %0,45,90,135,180,225,270,315
+    trials = zeros(numel(muscleArrayEMG),numel(directions));
     
     %plot 'em
     figEMG = figure('Name','EMG motor noise check');
@@ -259,19 +263,23 @@
     %look at each muscle
     for i=1:numel(muscleArrayEMG)
         %look at the following trial numbers
-        for j=1:numel(trials)
+        for j=1:numel(directions)
             k=k+1;
+            %pick random trial number based on direction
+            dirArray = td_bump([td_bump.bumpDir]==dirs(j));
+            trial = randperm(length(dirArray),1);
+            trials(i,j) = trial;
             %emg plots
             set(0,'CurrentFigure',figEMG)
-            subplot(numel(muscleArrayEMG),numel(trials),k);
-            title(strcat(muscleNames(i),string(trials(j))))
+            subplot(numel(muscleArrayEMG),numel(directions),k);
+            title(strcat(muscleNames(i),string(dirs(j)),'-trial',string(trial)))
             hold on
-            emg = plot(timeArray, td_bump(j).emg(tStart:tEnd,muscleArrayEMG(i)),'k','LineWidth',1)
+            emg = plot(timeArray, td_bump(trial).emg(tStart:tEnd,muscleArrayEMG(i)),'k','LineWidth',1)
             sgtitle('EMG motor noise check');
         end
     end
     
-    clear i j k timeArray muscleArrayEMG muscleNames trials
+    clear i j k timeArray tStart tEnd muscleArrayEMG muscleNames dir dirs dirArray trial
     
     
     
