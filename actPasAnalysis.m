@@ -53,12 +53,16 @@
 
 %% separate passive and active trials, only look at reward trials
     td_bump = tds(~isnan([tds.idx_bumpTime]));
+    td_bump = td_bump(find([td_bump.result]=='R'));
     td_act = tds(isnan([tds.idx_bumpTime]));
     td_act = td_act(find([td_act.result]=='R'));
     
     clear tds
     
 %% get movement onset for active and passive 
+
+%     td_act = getNorm(td_act,struct('signals','pos','field_extra','_norm'));
+%     td_bump = getNorm(td_bump,struct('signals','pos','field_extra','_norm'));
 
     %active
     td_act = getNorm(td_act,struct('signals','vel','field_extra','_norm'));
@@ -282,4 +286,93 @@
     clear i j k timeArray tStart tEnd muscleArrayEMG muscleNames dir dirs dirArray trial
     
     
+    %% figure out time window for emg post-bump
+    
+   pasWindows = zeros(numel(td_bump),1);
+   plott = true;
+    
+%    for t=1:numel(td_bump)
+t=62;
+        %find max position to identify end of trial
+        centerPosX = (td_bump(t).pos(td_bump(t).idx_bumpTime,1));
+        centerPosY = (td_bump(t).pos(td_bump(t).idx_bumpTime,2));
+        distX = (td_bump(t).pos(td_bump(t).idx_bumpTime:td_bump(t).idx_goCueTime,1) - centerPosX).^2;
+        distY = (td_bump(t).pos(td_bump(t).idx_bumpTime:td_bump(t).idx_goCueTime,2) - centerPosY).^2;
+        distances = sqrt(distX + distY);
+        [~,pasMax] = max(distances);
+        pasMax = pasMax-1+td_bump(t).idx_bumpTime;
+        pasWin = numel(td_bump(t).pos((td_bump(t).idx_bumpTime+0.125/td.bin_size):pasMax,1));
+        plotWin = numel(td_bump(t).pos((td_bump(t).idx_bumpTime):pasMax,1));
+        
+        pasWindows(t,1) = pasWin;
+        
+        if plott
+            figs = figure('Name','Handle speed and velocity');
+
+            %passive
+            subplot(2,3,1);
+            plot(td_bump(t).pos(td_bump(t).idx_bumpTime:td_bump(t).idx_goCueTime,1),td_bump(t).pos(td_bump(t).idx_bumpTime:td_bump(t).idx_goCueTime,2))
+            hold on
+            gDot = scatter(td_bump(t).pos(td_bump(t).idx_bumpTime,1),td_bump(t).pos(td_bump(t).idx_bumpTime,2),'g','filled')
+            rDot = scatter(td_bump(t).pos((td_bump(t).idx_bumpTime+0.125/td.bin_size),1),td_bump(t).pos((td_bump(t).idx_bumpTime+0.125/td.bin_size),2),'r','filled')
+            bDot = scatter(td_bump(t).pos(pasMax,1),td_bump(t).pos(pasMax,2),'b','filled')
+            title('Passive - Handle position')
+            xlabel('X position')
+            ylabel('Y position')
+            
+            sgtitle(['Trial ',num2str(t)])
+            legend([gDot, rDot, bDot],'start of bump','end of bump',['max distance from' newline 'center/end of trial'],...
+                'Position',[0.05 0.9 0.1 0.1])
+
+            subplot(2,3,2);
+            plot(0:numel(td_bump(t).idx_bumpTime:pasMax)-1,td_bump(t).vel_norm(td_bump(t).idx_bumpTime:pasMax))
+            hold on
+            scatter(0,td_bump(t).vel_norm(td_bump(t).idx_bumpTime),'g','filled')
+            scatter(pasMax-td_bump(t).idx_bumpTime,td_bump(t).vel_norm(pasMax),'b','filled')
+            title('Passive - Handle speed including bump')
+            xlabel('Time (bins)')
+            ylabel('Normalized velocity (speed)')
+
+            subplot(2,3,3);
+            plot(0:numel((td_bump(t).idx_bumpTime+0.125/td.bin_size):pasMax)-1,td_bump(t).vel_norm((td_bump(t).idx_bumpTime+0.125/td.bin_size):pasMax))
+            hold on
+            scatter(0,td_bump(t).vel_norm(td_bump(t).idx_bumpTime+0.125/td.bin_size),'r','filled')
+            scatter(pasMax-(td_bump(t).idx_bumpTime+0.125/td.bin_size),td_bump(t).vel_norm(pasMax),'b','filled')
+            title('Passive - Handle speed post-bump')
+            xlabel('Time (bins)')
+            ylabel('Normalized velocity (speed)')
+
+            %active
+            subplot(2,3,4);
+            plot(td_act(t).pos((td_act(t).idx_endTime-plotWin):td_act(t).idx_endTime,1),td_act(t).pos((td_act(t).idx_endTime-plotWin):td_act(t).idx_endTime,2))
+            hold on
+            scatter(td_act(t).pos((td_act(t).idx_endTime-plotWin),1),td_act(t).pos((td_act(t).idx_endTime-plotWin),2),'g','filled')
+            scatter(td_act(t).pos((td_act(t).idx_endTime-pasWin),1),td_act(t).pos((td_act(t).idx_endTime-pasWin),2),'r','filled')
+            scatter(td_act(t).pos((td_act(t).idx_endTime),1),td_act(t).pos((td_act(t).idx_endTime),2),'b','filled')
+            title('Active - Handle position')
+            xlabel('X position')
+            ylabel('Y position')
+
+            subplot(2,3,5);
+            plot(0:numel((td_act(t).idx_endTime-plotWin):td_act(t).idx_endTime)-1,td_act(t).vel_norm((td_act(t).idx_endTime-plotWin):td_act(t).idx_endTime))
+            hold on
+            scatter(0,td_act(t).vel_norm(td_act(t).idx_endTime-plotWin),'g','filled')
+            scatter(td_act(t).idx_endTime-(td_act(t).idx_endTime-plotWin),td_act(t).vel_norm(td_act(t).idx_endTime),'b','filled')
+            title('Active - Handle speed (including bump window)')
+            xlabel('Time (bins)')
+            ylabel('Normalized velocity (speed)')
+
+            subplot(2,3,6);
+            plot(0:numel((td_act(t).idx_endTime-pasWin):td_act(t).idx_endTime)-1,td_act(t).vel_norm((td_act(t).idx_endTime-pasWin):td_act(t).idx_endTime))
+            hold on
+            scatter(0,td_act(t).vel_norm(td_act(t).idx_endTime-pasWin),'r','filled')
+            scatter(td_act(t).idx_endTime-(td_act(t).idx_endTime-pasWin),td_act(t).vel_norm(td_act(t).idx_endTime),'b','filled')
+            title('Active - Handle speed (post bump window only)')
+            xlabel('Time (bins)')
+            ylabel('Normalized velocity (speed)')
+        end
+%     end
+    
+
+
     
